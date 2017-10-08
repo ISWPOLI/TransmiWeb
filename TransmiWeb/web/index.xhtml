@@ -2,9 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>TrasmiWeb</title>
+        <h:outputStylesheet name="css/jsfcrud.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -34,7 +36,7 @@
         </nav>
         <!--Portada--> 
         <div class="row">
-            <div class="slider fullscreen">
+            <div class="slider">
                 <ul class="slides">
                     <li>
                         <img src="http://cr00.epimg.net/radio/imagenes/2014/09/15/bogota/1410793020_416379_1410870060_noticia_normal.jpg"/> <!-- random image -->
@@ -65,37 +67,39 @@
 
         <!-- Modal Inicio Sesion -->
         <div id="modal1" class="modal">
-            <div class="modal-content">
-                <h4>Iniciar Sesion</h4>
-                <div class="row">
-                    <form class="col s12">
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <i class="material-icons prefix">face</i>
-                                <input id="icon_prefix" type="text" class="validate"/>
-                                <label for="icon_prefix">Usuario</label>
-                            </div>
-                            <div class="input-field col s6">
-                                <i class="material-icons prefix">vpn_key</i>
-                                <input id="icon_telephone" type="tel" class="validate"/>
-                                <label for="icon_telephone">Clave</label>
+            <h:form id="login">
+                <div class="modal-content">
+                    <h4>Iniciar Sesion</h4>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">face</i>
+                                    <h:inputText id="correo" c:type="text" class="validate"/>
+                                    <label for="icon_prefix">Usuario</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">vpn_key</i>
+                                    <h:inputSecret  id="clave" class="validate"/>
+                                    <label for="icon_telephone">Clave</label>
+                                </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <a href="#!" class="modal-action modal-close waves-effect waves-yellow accent-4 btn-flat">Aceptar</a>
-                <a href="#modal3" class="modal-action modal-close waves-effect waves-yellow accent-4 btn-flat">Aun no estoy registrado</a>
-                <a href="#!" class="modal-action modal-close waves-effect waves-gray btn-flat">Cancelar</a>
-                 <h:dataTable var="t" value="${recargas.mostrarTarjetas()}">
-                <h:column>
-                    <f:facet name="header">id</f:facet>
-                    <h:outputText value="${t.IDTarjeta}"></h:outputText>
-                </h:column>
-            </h:dataTable>
-            </div>
-           
+
+                <div class="modal-footer">
+                    <h:commandLink type="submit" action="#{usuarioController.login()}" class="modal-action modal-close waves-effect waves-yellow accent-4 btn-flat">Aceptar</h:commandLink>
+                        <a href="#modal3" class="modal-action modal-close waves-effect waves-yellow accent-4 btn-flat">Aun no estoy registrado</a>
+                        <a href="#!" class="modal-action modal-close waves-effect waves-gray btn-flat">Cancelar</a>
+                        <!--  <h:dataTable var="t" value="{recargas.mostrarTarjetas()}">
+                        <h:column>
+                            <f:facet name="header">id</f:facet>
+                            <h:outputText value="{t.IDTarjeta}"></h:outputText>
+                        </h:column>
+                    </h:dataTable>-->
+                </div>
+            </h:form>
         </div>
 
         <!-- Modal Contacto -->
@@ -193,12 +197,83 @@
         <script src="js/materialize.js"></script>
         <script src="js/init.js"></script>
 
+        <br />
+
+        <br />
+        <h:link outcome="/estadoSolicitud/List" value="Show All EstadoSolicitud Items"/>
+        <br />
+        <h:link outcome="/estadoTarjeta/List" value="Show All EstadoTarjeta Items"/>
+        <br />
+        <h:link outcome="/movimientos/List" value="Show All Movimientos Items"/>
+        <br />
+        <h:link outcome="/perfil/List" value="Show All Perfil Items"/>
+        <br />
+        <h:link outcome="/solicitudes/List" value="Show All Solicitudes Items"/>
+        <br />
+        <h:link outcome="/tarjeta/List" value="Show All Tarjeta Items"/>
+        <br />
+        <h:link outcome="/tipoDocumento/List" value="Show All TipoDocumento Items"/>
+        <br />
+        <h:link outcome="/tipoMovimiento/List" value="Show All TipoMovimiento Items"/>
+        <br />
+        <h:link outcome="/usuario/List" value="Show All Usuario Items"/>
+        <br />
+        <h:link outcome="/estadoSolicitud/List" value="Show All EstadoSolicitud Items"/>
+        <br />
+        <h:link outcome="/estadoTarjeta/List" value="Show All EstadoTarjeta Items"/>
+        <br />
+        <h:link outcome="/movimientos/List" value="Show All Movimientos Items"/>
+        <br />
+        <h:link outcome="/perfil/List" value="Show All Perfil Items"/>
+        <br />
+        <h:link outcome="/solicitudes/List" value="Show All Solicitudes Items"/>
+        <br />
+        <h:link outcome="/tarjeta/List" value="Show All Tarjeta Items"/>
+        <br />
+        <h:link outcome="/tipoDocumento/List" value="Show All TipoDocumento Items"/>
+        <br />
+        <h:link outcome="/tipoMovimiento/List" value="Show All TipoMovimiento Items"/>
+        <br />
+        <h:link outcome="/usuario/List" value="Show All Usuario Items"/>
     </h:body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('.modal').modal();
             $('.slider').slider();
+            $('select').material_select();
+            $('#modalx').modal('open');
+
         });
+
     </script>
 </html>
 

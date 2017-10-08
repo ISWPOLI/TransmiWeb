@@ -5,7 +5,7 @@
  */
 package com.facade;
 
-import com.entity.RepoPerdida;
+import com.entity.Solicitudes;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author Miguel
  */
 @Stateless
-public class RepoPerdidaFacade extends AbstractFacade<RepoPerdida> {
+public class SolicitudesFacade extends AbstractFacade<Solicitudes> {
 
     @PersistenceContext(unitName = "TransmiWebPU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class RepoPerdidaFacade extends AbstractFacade<RepoPerdida> {
         return em;
     }
 
-    public RepoPerdidaFacade() {
-        super(RepoPerdida.class);
+    public SolicitudesFacade() {
+        super(Solicitudes.class);
     }
     
 }

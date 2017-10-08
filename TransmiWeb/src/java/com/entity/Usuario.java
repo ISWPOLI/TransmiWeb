@@ -40,9 +40,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Usuario.findByIDUsuario", query = "SELECT u FROM Usuario u WHERE u.iDUsuario = :iDUsuario")
     , @NamedQuery(name = "Usuario.findByNombre", query = "SELECT u FROM Usuario u WHERE u.nombre = :nombre")
     , @NamedQuery(name = "Usuario.findByApellido", query = "SELECT u FROM Usuario u WHERE u.apellido = :apellido")
-    , @NamedQuery(name = "Usuario.findByClave", query = "SELECT u FROM Usuario u WHERE u.clave = :clave")
+    , @NamedQuery(name = "Usuario.findByCorreo", query = "SELECT u FROM Usuario u WHERE u.correo = :correo")
     , @NamedQuery(name = "Usuario.findByFechaNacimiento", query = "SELECT u FROM Usuario u WHERE u.fechaNacimiento = :fechaNacimiento")
-    , @NamedQuery(name = "Usuario.findByDocumento", query = "SELECT u FROM Usuario u WHERE u.documento = :documento")})
+    , @NamedQuery(name = "Usuario.findByDocumento", query = "SELECT u FROM Usuario u WHERE u.documento = :documento")
+    , @NamedQuery(name = "Usuario.findByClave", query = "SELECT u FROM Usuario u WHERE u.clave = :clave")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,8 +65,8 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
-    @Column(name = "Clave")
-    private String clave;
+    @Column(name = "correo")
+    private String correo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "FechaNacimiento")
@@ -76,6 +77,11 @@ public class Usuario implements Serializable {
     @Size(min = 1, max = 12)
     @Column(name = "Documento")
     private String documento;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 30)
+    @Column(name = "Clave")
+    private String clave;
     @JoinColumn(name = "IDTipoDocumento", referencedColumnName = "IDTipoDocumento")
     @ManyToOne(optional = false)
     private TipoDocumento iDTipoDocumento;
@@ -84,6 +90,8 @@ public class Usuario implements Serializable {
     private Perfil iDperfil;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "iDUsuario")
     private Collection<Tarjeta> tarjetaCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iDUsuario")
+    private Collection<Solicitudes> solicitudesCollection;
 
     public Usuario() {
     }
@@ -92,13 +100,14 @@ public class Usuario implements Serializable {
         this.iDUsuario = iDUsuario;
     }
 
-    public Usuario(Integer iDUsuario, String nombre, String apellido, String clave, Date fechaNacimiento, String documento) {
+    public Usuario(Integer iDUsuario, String nombre, String apellido, String correo, Date fechaNacimiento, String documento, String clave) {
         this.iDUsuario = iDUsuario;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.clave = clave;
+        this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;
         this.documento = documento;
+        this.clave = clave;
     }
 
     public Integer getIDUsuario() {
@@ -125,12 +134,12 @@ public class Usuario implements Serializable {
         this.apellido = apellido;
     }
 
-    public String getClave() {
-        return clave;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setClave(String clave) {
-        this.clave = clave;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public Date getFechaNacimiento() {
@@ -147,6 +156,14 @@ public class Usuario implements Serializable {
 
     public void setDocumento(String documento) {
         this.documento = documento;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 
     public TipoDocumento getIDTipoDocumento() {
@@ -172,6 +189,15 @@ public class Usuario implements Serializable {
 
     public void setTarjetaCollection(Collection<Tarjeta> tarjetaCollection) {
         this.tarjetaCollection = tarjetaCollection;
+    }
+
+    @XmlTransient
+    public Collection<Solicitudes> getSolicitudesCollection() {
+        return solicitudesCollection;
+    }
+
+    public void setSolicitudesCollection(Collection<Solicitudes> solicitudesCollection) {
+        this.solicitudesCollection = solicitudesCollection;
     }
 
     @Override

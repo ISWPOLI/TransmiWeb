@@ -6,6 +6,7 @@
 package com.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -30,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Movimientos.findAll", query = "SELECT m FROM Movimientos m")
     , @NamedQuery(name = "Movimientos.findByIDMovimiento", query = "SELECT m FROM Movimientos m WHERE m.iDMovimiento = :iDMovimiento")
+    , @NamedQuery(name = "Movimientos.findByFecha", query = "SELECT m FROM Movimientos m WHERE m.fecha = :fecha")
     , @NamedQuery(name = "Movimientos.findByMonto", query = "SELECT m FROM Movimientos m WHERE m.monto = :monto")})
 public class Movimientos implements Serializable {
 
@@ -39,6 +43,11 @@ public class Movimientos implements Serializable {
     @Basic(optional = false)
     @Column(name = "IDMovimiento")
     private Integer iDMovimiento;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "Fecha")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
     @Basic(optional = false)
     @NotNull
     @Column(name = "Monto")
@@ -57,8 +66,9 @@ public class Movimientos implements Serializable {
         this.iDMovimiento = iDMovimiento;
     }
 
-    public Movimientos(Integer iDMovimiento, int monto) {
+    public Movimientos(Integer iDMovimiento, Date fecha, int monto) {
         this.iDMovimiento = iDMovimiento;
+        this.fecha = fecha;
         this.monto = monto;
     }
 
@@ -68,6 +78,14 @@ public class Movimientos implements Serializable {
 
     public void setIDMovimiento(Integer iDMovimiento) {
         this.iDMovimiento = iDMovimiento;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
     public int getMonto() {

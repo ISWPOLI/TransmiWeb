@@ -52,8 +52,9 @@ public class Tarjeta implements Serializable {
     @JoinColumn(name = "IDUsuario", referencedColumnName = "IDUsuario")
     @ManyToOne(optional = false)
     private Usuario iDUsuario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iDTarjeta")
-    private Collection<RepoPerdida> repoPerdidaCollection;
+    @JoinColumn(name = "IDEstado", referencedColumnName = "iDEstado")
+    @ManyToOne(optional = false)
+    private EstadoTarjeta iDEstado;
 
     public Tarjeta() {
     }
@@ -100,13 +101,12 @@ public class Tarjeta implements Serializable {
         this.iDUsuario = iDUsuario;
     }
 
-    @XmlTransient
-    public Collection<RepoPerdida> getRepoPerdidaCollection() {
-        return repoPerdidaCollection;
+    public EstadoTarjeta getIDEstado() {
+        return iDEstado;
     }
 
-    public void setRepoPerdidaCollection(Collection<RepoPerdida> repoPerdidaCollection) {
-        this.repoPerdidaCollection = repoPerdidaCollection;
+    public void setIDEstado(EstadoTarjeta iDEstado) {
+        this.iDEstado = iDEstado;
     }
 
     @Override

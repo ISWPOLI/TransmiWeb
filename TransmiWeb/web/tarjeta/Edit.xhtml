@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditTarjetaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditTarjetaLabel_IDTarjeta}" for="IDTarjeta" />
+                    <h:inputText id="IDTarjeta" value="#{tarjetaController.selected.IDTarjeta}" title="#{bundle.EditTarjetaTitle_IDTarjeta}" required="true" requiredMessage="#{bundle.EditTarjetaRequiredMessage_IDTarjeta}"/>
+                    <h:outputLabel value="#{bundle.EditTarjetaLabel_saldo}" for="saldo" />
+                    <h:inputText id="saldo" value="#{tarjetaController.selected.saldo}" title="#{bundle.EditTarjetaTitle_saldo}" required="true" requiredMessage="#{bundle.EditTarjetaRequiredMessage_saldo}"/>
+                    <h:outputLabel value="#{bundle.EditTarjetaLabel_IDUsuario}" for="IDUsuario" />
+                    <h:selectOneMenu id="IDUsuario" value="#{tarjetaController.selected.IDUsuario}" title="#{bundle.EditTarjetaTitle_IDUsuario}" required="true" requiredMessage="#{bundle.EditTarjetaRequiredMessage_IDUsuario}">
+                        <f:selectItems value="#{usuarioController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditTarjetaLabel_IDEstado}" for="IDEstado" />
+                    <h:selectOneMenu id="IDEstado" value="#{tarjetaController.selected.IDEstado}" title="#{bundle.EditTarjetaTitle_IDEstado}" required="true" requiredMessage="#{bundle.EditTarjetaRequiredMessage_IDEstado}">
+                        <f:selectItems value="#{estadoTarjetaController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{tarjetaController.update}" value="#{bundle.EditTarjetaSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditTarjetaViewLink}"/>
+                <br />
+                <h:commandLink action="#{tarjetaController.prepareList}" value="#{bundle.EditTarjetaShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditTarjetaIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

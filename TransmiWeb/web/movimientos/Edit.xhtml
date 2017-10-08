@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditMovimientosTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditMovimientosLabel_IDMovimiento}" for="IDMovimiento" />
+                    <h:inputText id="IDMovimiento" value="#{movimientosController.selected.IDMovimiento}" title="#{bundle.EditMovimientosTitle_IDMovimiento}" required="true" requiredMessage="#{bundle.EditMovimientosRequiredMessage_IDMovimiento}"/>
+                    <h:outputLabel value="#{bundle.EditMovimientosLabel_fecha}" for="fecha" />
+                    <h:inputText id="fecha" value="#{movimientosController.selected.fecha}" title="#{bundle.EditMovimientosTitle_fecha}" required="true" requiredMessage="#{bundle.EditMovimientosRequiredMessage_fecha}">
+                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditMovimientosLabel_monto}" for="monto" />
+                    <h:inputText id="monto" value="#{movimientosController.selected.monto}" title="#{bundle.EditMovimientosTitle_monto}" required="true" requiredMessage="#{bundle.EditMovimientosRequiredMessage_monto}"/>
+                    <h:outputLabel value="#{bundle.EditMovimientosLabel_tipoMovimiento}" for="tipoMovimiento" />
+                    <h:selectOneMenu id="tipoMovimiento" value="#{movimientosController.selected.tipoMovimiento}" title="#{bundle.EditMovimientosTitle_tipoMovimiento}" required="true" requiredMessage="#{bundle.EditMovimientosRequiredMessage_tipoMovimiento}">
+                        <f:selectItems value="#{tipoMovimientoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditMovimientosLabel_IDTarjeta}" for="IDTarjeta" />
+                    <h:selectOneMenu id="IDTarjeta" value="#{movimientosController.selected.IDTarjeta}" title="#{bundle.EditMovimientosTitle_IDTarjeta}" required="true" requiredMessage="#{bundle.EditMovimientosRequiredMessage_IDTarjeta}">
+                        <f:selectItems value="#{tarjetaController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{movimientosController.update}" value="#{bundle.EditMovimientosSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditMovimientosViewLink}"/>
+                <br />
+                <h:commandLink action="#{movimientosController.prepareList}" value="#{bundle.EditMovimientosShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditMovimientosIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

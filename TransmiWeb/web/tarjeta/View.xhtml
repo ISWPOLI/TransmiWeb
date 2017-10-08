@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewTarjetaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewTarjetaLabel_IDTarjeta}"/>
+                    <h:outputText value="#{tarjetaController.selected.IDTarjeta}" title="#{bundle.ViewTarjetaTitle_IDTarjeta}"/>
+                    <h:outputText value="#{bundle.ViewTarjetaLabel_saldo}"/>
+                    <h:outputText value="#{tarjetaController.selected.saldo}" title="#{bundle.ViewTarjetaTitle_saldo}"/>
+                    <h:outputText value="#{bundle.ViewTarjetaLabel_IDUsuario}"/>
+                    <h:outputText value="#{tarjetaController.selected.IDUsuario}" title="#{bundle.ViewTarjetaTitle_IDUsuario}"/>
+                    <h:outputText value="#{bundle.ViewTarjetaLabel_IDEstado}"/>
+                    <h:outputText value="#{tarjetaController.selected.IDEstado}" title="#{bundle.ViewTarjetaTitle_IDEstado}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{tarjetaController.destroyAndView}" value="#{bundle.ViewTarjetaDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewTarjetaEditLink}"/>
+                <br />
+                <h:commandLink action="#{tarjetaController.prepareCreate}" value="#{bundle.ViewTarjetaCreateLink}" />
+                <br />
+                <h:commandLink action="#{tarjetaController.prepareList}" value="#{bundle.ViewTarjetaShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewTarjetaIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditEstadoSolicitudTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditEstadoSolicitudLabel_IDEstadoSolicitudd}" for="IDEstadoSolicitudd" />
+                    <h:inputText id="IDEstadoSolicitudd" value="#{estadoSolicitudController.selected.IDEstadoSolicitudd}" title="#{bundle.EditEstadoSolicitudTitle_IDEstadoSolicitudd}" required="true" requiredMessage="#{bundle.EditEstadoSolicitudRequiredMessage_IDEstadoSolicitudd}"/>
+                    <h:outputLabel value="#{bundle.EditEstadoSolicitudLabel_descripcion}" for="descripcion" />
+                    <h:inputText id="descripcion" value="#{estadoSolicitudController.selected.descripcion}" title="#{bundle.EditEstadoSolicitudTitle_descripcion}" required="true" requiredMessage="#{bundle.EditEstadoSolicitudRequiredMessage_descripcion}"/>
+                </h:panelGrid>
+                <h:commandLink action="#{estadoSolicitudController.update}" value="#{bundle.EditEstadoSolicitudSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditEstadoSolicitudViewLink}"/>
+                <br />
+                <h:commandLink action="#{estadoSolicitudController.prepareList}" value="#{bundle.EditEstadoSolicitudShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditEstadoSolicitudIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -5,25 +5,64 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <h:head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <h:outputStylesheet name="./css/default.css"/>
-        <h:outputStylesheet name="./css/cssLayout.css"/>
-        <title>Facelets Template</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>TrasmiWeb</title>
+
+        <!-- CSS  -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+        <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     </h:head>
 
     <h:body>
-
         <div id="top">
-            <ui:insert name="top">Top</ui:insert>
-        </div>
+            <ui:insert name="top">
+                <nav class="nav-extended">
+                    <div class="navbar-fixed  grey darken-4 ">
+                        <a href=""><img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/TransMilenio_Logo.png" width="75"/></a>
+                        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                        <ul class="right hide-on-med-and-down">
+                            <li><a class="waves-effect waves-red modal-trigger" href="FormasPago.html"><h6 class="light grey-text text-lighten-3">Formas de pago</h6></a></li>
+                            <li><a class="waves-effect waves-red modal-trigger" href="#modal3"><h6 class="light grey-text text-lighten-3">Mis Tarjetas</h6></a></li>
+                            <li><a class="waves-effect waves-red modal-trigger" href="#modal1"><h6 class="light grey-text text-lighten-3">${usuarioController.usuObj.nombre}</h6></a></li>
+                            <li><a class="waves-effect waves-red modal-trigger" href="#modal2"><i class="material-icons light grey-text text-lighten-3">live_help</i></a></li>
+                            <li><a href="#modal1"><i class="material-icons light grey-text text-lighten-3">search</i></a></li> <li><a href=""><i class="material-icons light grey-text text-lighten-3">more_vert</i></a></li>
+                        </ul>
+                    </div>
 
-        <div id="content" class="center_content">
-            <ui:insert name="content">Content</ui:insert>
+                </nav>
+                <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+                <script src="../js/materialize.js"></script>
+                <script src="../js/init.js"></script>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('.modal').modal();
+                        $('.slider').slider();
+                        $('select').material_select();
+                    });
+                </script>
+            </ui:insert>
         </div>
+        <div class="container">
 
+            <div id="content" class="center_content">
+                <ui:insert name="body">Content</ui:insert>
+            </div>
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large red">
+                    <i class="large material-icons tooltipped" data-position="left" data-delay="50" data-tooltip="Solicitudes">add</i>
+                </a>
+                <ul>
+                    <li><a class="btn-floating tooltipped" data-position="left" data-delay="50" data-tooltip="Solicitud de soporte"><i class="material-icons">build</i></a></li>
+                    <li><a class="btn-floating yellow darken-1 tooltipped" data-position="left" data-delay="50" data-tooltip="Solicitud de tarjeta"><i class="material-icons">format_quote</i></a></li>
+                </ul>
+            </div>
+        </div>
         <div id="bottom">
             <ui:insert name="bottom">Bottom</ui:insert>
         </div>
+
 
     </h:body>
 
