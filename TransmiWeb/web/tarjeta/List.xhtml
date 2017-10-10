@@ -13,73 +13,37 @@
         </ui:define>
         <ui:define name="body">
             <h:form id="form">
-                <h:panelGroup id="messagePanel" layout="block">
-                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-                </h:panelGroup>
-                <h:outputText escape="false" value="#{bundle.ListTarjetaEmpty}" rendered="#{tarjetaController.items.rowCount == 0}"/>
                 <div class="row">
-
-                    <h:panelGroup rendered="#{tarjetaController.items.rowCount > 0}" >
-                        <br/>
-                        Mostrando #{tarjetaController.pagination.pageFirstItem + 1} a #{tarjetaController.pagination.pageLastItem + 1} de #{tarjetaController.pagination.itemsCount} items
-
-                        <h:dataTable value="#{tarjetaController.items}" var="item"  class="highlight responsive-table" id="tablaTar">
-                            <h:column>
-                                <f:facet name="header">
-                                    <h:outputText value="#{bundle.ListTarjetaTitle_IDTarjeta}"/>
-                                </f:facet>
-                                <h:outputText value="#{item.IDTarjeta}"/>
-                            </h:column>
-                            <h:column>
-                                <f:facet name="header">
-                                    <h:outputText value="#{bundle.ListTarjetaTitle_saldo}"/>
-                                </f:facet>
-                                <h:outputText value="$ #{item.saldo}"/>
-                            </h:column>
-                            <h:column>
-                                <f:facet name="header">
-                                    <h:outputText value="#{bundle.ListTarjetaTitle_IDUsuario}"/>
-                                </f:facet>
-                                <h:outputText value="#{item.IDUsuario.nombre}"/>
-                            </h:column>
-                            <h:column>
-                                <f:facet name="header">
-                                    <h:outputText value="#{bundle.ListTarjetaTitle_IDEstado}"/>
-                                </f:facet>
-                                <h:outputText value="#{item.IDEstado.descripcion}"/>
-                            </h:column>
-                            <h:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Acciones"/>
-                                </f:facet>
-                                <h:commandLink action="#{tarjetaController.destroy()}"><i class="material-icons tooltipped" data-position="bottom" data-delay="50" data-tooltip="Ver">pageview</i></h:commandLink>
-                                <a class="modal-trigger" href="#" onclick="Recargar(#{item.IDTarjeta})" onmouseover="#{tarjetaController.selectedItemIndex = item.IDTarjeta}"><i class="material-icons tooltipped" data-position="bottom" data-delay="50" data-tooltip="Recargar">monetization_on</i></a>
-                                <a class="modal-trigger" href="#" onclick="confirmaReport(#{item.IDTarjeta})" onmouseover="#{tarjetaController.selectedItemIndex = item.IDTarjeta}"><i class="material-icons tooltipped" data-position="bottom" data-delay="50" data-tooltip="Reportar como perdida">report</i></a>
-                                <h:link outcome="/movimientos/List" ><i class="material-icons tooltipped" data-position="bottom" data-delay="50" data-tooltip="Reporte de movimientos">list</i></h:link>
-                            </h:column>
-                        </h:dataTable>
-                        <div>
-                            <div class="col s3 offset-s3">
-                                <c:if test="#{tarjetaController.pagination.hasPreviousPage}" >
-                                    <h:commandLink class="waves-effect waves-light btn red" action="#{tarjetaController.previous}" value="#{bundle.Previous}"/>&nbsp;
-                                </c:if>
-                                <c:if test="#{!tarjetaController.pagination.hasPreviousPage}" >
-                                    <h:commandLink class="waves-effect waves-light btn red disabled" action="#{tarjetaController.previous}" value="#{bundle.Previous}"/>&nbsp;
-                                </c:if>
-                            </div>
-                            <div class="col s3">
-                                <c:if test="#{tarjetaController.pagination.hasNextPage}" >
-                                    <h:commandLink class="waves-effect waves-light btn red" action="#{tarjetaController.next}" value="#{bundle.Next}"/>&nbsp;
-                                </c:if>
-                                <c:if test="#{!tarjetaController.pagination.hasNextPage}" >
-                                    <h:commandLink class="waves-effect waves-light btn red disabled" action="#{tarjetaController.next}" value="#{bundle.Next}"/>&nbsp;
-                                </c:if>
-                            </div>
-                        </div>
-                    </h:panelGroup>
+                    <table id="example" class="display highlight" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Codigo Tarjeta</th>
+                                <th>Usuario</th>
+                                <th>Saldo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="#{tarjetaController.TarjetasDeUsuario()}" var="item">
+                                <tr>
+                                    <td>#{item.IDTarjeta}</td>
+                                    <td>#{item.IDUsuario.nombre}</td>
+                                    <td>$ #{item.saldo}</td>
+                                    <td>#{item.IDEstado.descripcion}</td>
+                                    <td>
+                                        <h:commandLink onclick="reportar(#{item.IDTarjeta})"><i class="material-icons">report</i></h:commandLink>
+                                        <h:commandLink><i class="material-icons">monetization_on</i></h:commandLink>
+                                        <h:commandLink><i class="material-icons">view_list</i></h:commandLink>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
                 </div>
             </h:form>
             <h:form id="recargarForm">
+
                 <div id="recarga" class="modal">
                     <div class="modal-content">
                         <h4>Recargar</h4>
@@ -89,42 +53,40 @@
                         </h:selectOneMenu>
                     </div>
                     <div class="modal-footer">
-                        <h:commandButton class="waves-effect waves-light btn red" value="Si" action="#{solicitudesController.recargar()}">
-                        </h:commandButton>
+                        <h:commandLink class="waves-effect waves-light btn red" value="Si" action="#{solicitudesController.recargar()}"/>
                         <a href="#!" class="modal-action modal-close waves-effect waves-light btn grey">Cancelar</a>
                     </div>
                 </div> 
             </h:form>
             <h:form id="myform">
-                <div id="modalx" class="modal bottom-sheet">
+                <div id="reporte" class="modal bottom-sheet">
                     <div class="modal-content">
                         <h4>Confirmar</h4>
-                        <p>Está seguro que desea reportar la tarjeta N° <span id="idTar"></span>, Se aplicará un costo de $2000 para recuperarla</p>
+                        <p >Está seguro que desea reportar la tarjeta N° <span id="idTar"></span>, Se aplicará un costo de $2000 para recuperarla</p>
                         <h:inputHidden value="#{tarjetaController.selectedItemIndex}" id="hiddenId" />
+                        <h:inputHidden value="#{movimientosController.selectedItemIndex}" id="codigo" />
                     </div>
                     <div class="modal-footer">
-                        <h:commandButton class="waves-effect waves-light btn red" value="Si" action="#{tarjetaController.update()}">
-                        </h:commandButton>
+                        <h:commandLink class="waves-effect waves-light btn red" action="#{tarjetaController.update()}" value="Si"/>
                         <a href="#!" class="modal-action modal-close waves-effect waves-light btn grey">Cancelar</a>
                     </div>
                 </div> 
             </h:form>
-            <script type="text/javascript">
-                                    $(document).ready(function () {
 
-                                    });
-                                    function confirmaReport(id) {
-                                        $('#modalx').modal('open');
-                                        $('#idTar').html(id);
-                                        $('#tarjeta').val(id);
-                                        document.getElementById('myform:hiddenId').value = id;
-                                    }
-                                    function Recargar(id) {
-                                        $('#recarga').modal('open');
-                                        $('#idTar0').html(id);
-                                        document.getElementById('myform:oculto').value = id;
-                                    }
+
+
+            <script>
+                $(document).ready(function () {
+
+                    
+                });
+                function reportar(id) {
+                        $("#idTar").html(id);
+                        $('#reporte').modal('open');
+                    }
             </script>
+
+
         </ui:define>
 
     </ui:composition>

@@ -43,16 +43,4 @@ public class TarjetaFacade extends AbstractFacade<Tarjeta> {
         return tarjetas;
     }
     
-    public List<Tarjeta> TarjetasDeUsuario(Usuario idUsuario,int[] range) {
-        List<Tarjeta> tarjetas = new ArrayList<>();
-        try {
-            Query p = em.createQuery("SELECT t FROM Tarjeta t WHERE t.iDUsuario  = :user and t.iDEstado.iDEstado = 1");
-            p.setParameter("user", idUsuario);
-            p.setMaxResults(range[1] - range[0]);
-            p.setFirstResult(range[0]  + 1);
-            tarjetas = p.getResultList();
-        } catch (Exception e) {
-        }
-        return tarjetas;
-    }
 }

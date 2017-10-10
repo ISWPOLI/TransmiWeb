@@ -22,6 +22,14 @@ import javax.faces.model.SelectItem;
 @SessionScoped
 public class MovimientosController implements Serializable {
 
+    public int getSelectedItemIndex() {
+        return selectedItemIndex;
+    }
+
+    public void setSelectedItemIndex(int selectedItemIndex) {
+        this.selectedItemIndex = selectedItemIndex;
+    }
+
     private Movimientos current;
     private DataModel items = null;
     
@@ -56,7 +64,7 @@ public class MovimientosController implements Serializable {
 
                 @Override
                 public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
+                    return new ListDataModel(getFacade().movimientoDeTarjeta(selectedItemIndex ,new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
                 }
             };
         }

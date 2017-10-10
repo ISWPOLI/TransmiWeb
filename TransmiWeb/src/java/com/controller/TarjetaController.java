@@ -8,6 +8,7 @@ import com.entity.Usuario;
 import com.facade.TarjetaFacade;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -27,12 +28,18 @@ public class TarjetaController implements Serializable {
 
     private Tarjeta current;
     private DataModel items = null;
+    FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+        Usuario log = (Usuario) session.getAttribute("usuario");
 
     @EJB
     private com.facade.TarjetaFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 
+    public List<Tarjeta> TarjetasDeUsuario() {
+        return getFacade().TarjetasDeUsuario(log);
+    }
     public TarjetaController() {
     }
 
@@ -49,22 +56,8 @@ public class TarjetaController implements Serializable {
     }
 
     public PaginationHelper getPagination() {
-        FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        Usuario log = (Usuario) session.getAttribute("usuario");
         if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().TarjetasDeUsuario(log).size();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().TarjetasDeUsuario(log, new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
-                }
-            };
+            
         }
         return pagination;
     }
@@ -211,6 +204,14 @@ public class TarjetaController implements Serializable {
 
     public void setSelectedItemIndex(int selectedItemIndex) {
         this.selectedItemIndex = selectedItemIndex;
+    }
+
+    public Tarjeta getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Tarjeta current) {
+        this.current = current;
     }
 
     @FacesConverter(forClass = Tarjeta.class)

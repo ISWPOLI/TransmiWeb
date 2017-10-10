@@ -46,7 +46,6 @@ public class Movimientos implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "Fecha")
-    @Temporal(TemporalType.DATE)
     private Date fecha;
     @Basic(optional = false)
     @NotNull
