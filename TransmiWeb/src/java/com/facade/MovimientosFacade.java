@@ -6,13 +6,11 @@
 package com.facade;
 
 import com.entity.Movimientos;
-import com.entity.Tarjeta;
-import com.entity.Usuario;
-import java.util.ArrayList;
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Query;
 
 /**
@@ -33,13 +31,11 @@ public class MovimientosFacade extends AbstractFacade<Movimientos> {
     public MovimientosFacade() {
         super(Movimientos.class);
     }
-    public List<Movimientos> movimientoDeTarjeta(int idTarjeta,int[] range) {
+    public List<Movimientos> movimientosDeTarjeta(int idTarjeta) {
         List<Movimientos> movimientos = new ArrayList<>();
         try {
             Query p = em.createQuery("SELECT m FROM Movimientos m WHERE m.iDTarjeta.iDTarjeta  = :tarjeta ");
             p.setParameter("tarjeta", idTarjeta);
-            p.setMaxResults(range[1] - range[0]);
-            p.setFirstResult(range[0] );
             movimientos = p.getResultList();
         } catch (Exception e) {
         }

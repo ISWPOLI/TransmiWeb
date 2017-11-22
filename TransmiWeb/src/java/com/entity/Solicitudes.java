@@ -46,13 +46,13 @@ public class Solicitudes implements Serializable {
     private Integer iDSolicitud;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 30)
+    @Size(min = 1, max = 3000)
     @Column(name = "Descripcion")
     private String descripcion;
     @Basic(optional = false)
     @NotNull
     @Column(name = "Fecha")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     @JoinColumn(name = "IDUsuario", referencedColumnName = "IDUsuario")
     @ManyToOne(optional = false)

@@ -1,11 +1,14 @@
 package com.controller.util;
 
+import com.entity.Usuario;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class JsfUtil {
 
@@ -14,7 +17,7 @@ public class JsfUtil {
         SelectItem[] items = new SelectItem[size];
         int i = 0;
         if (selectOne) {
-            items[0] = new SelectItem("", "---");
+            items[0] = new SelectItem("", "Seleccione uno");
             i++;
         }
         for (Object x : entities) {
@@ -56,5 +59,21 @@ public class JsfUtil {
         String theId = JsfUtil.getRequestParameter(requestParameterName);
         return converter.getAsObject(FacesContext.getCurrentInstance(), component, theId);
     }
+    
+    public static HttpSession getSession() {
+		return (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
+	}
 
+	public static HttpServletRequest getRequest() {
+		return (HttpServletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest();
+	}
+
+	public static Usuario getUser() {
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(false);
+		return (Usuario) session.getAttribute("usuario");
+	}
+    
 }

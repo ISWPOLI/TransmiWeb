@@ -3,97 +3,110 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 
-    <ui:composition template="/template.xhtml">
+    <ui:composition template="/Plantilla/plantilla.xhtml">
         <ui:define name="title">
             <h:outputText value="#{bundle.ListUsuarioTitle}"></h:outputText>
         </ui:define>
         <ui:define name="body">
-            <h:form styleClass="jsfcrud_list_form">
-                <h:panelGroup id="messagePanel" layout="block">
-                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-                </h:panelGroup>
-                <h:outputText escape="false" value="#{bundle.ListUsuarioEmpty}" rendered="#{usuarioController.items.rowCount == 0}"/>
-                <h:panelGroup rendered="#{usuarioController.items.rowCount > 0}">
-                    <h:outputText value="#{usuarioController.pagination.pageFirstItem + 1}..#{usuarioController.pagination.pageLastItem + 1}/#{usuarioController.pagination.itemsCount}"/>&nbsp;
-                    <h:commandLink action="#{usuarioController.previous}" value="#{bundle.Previous} #{usuarioController.pagination.pageSize}" rendered="#{usuarioController.pagination.hasPreviousPage}"/>&nbsp;
-                    <h:commandLink action="#{usuarioController.next}" value="#{bundle.Next} #{usuarioController.pagination.pageSize}" rendered="#{usuarioController.pagination.hasNextPage}"/>&nbsp;
-                    <h:dataTable value="#{usuarioController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_IDUsuario}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.IDUsuario}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_nombre}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.nombre}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_apellido}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.apellido}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_correo}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.correo}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_fechaNacimiento}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.fechaNacimiento}">
-                                <f:convertDateTime pattern="MM/dd/yyyy" />
-                            </h:outputText>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_documento}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.documento}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_clave}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.clave}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_IDTipoDocumento}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.IDTipoDocumento}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_IDperfil}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.IDperfil}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="&nbsp;"/>
-                            </f:facet>
-                            <h:commandLink action="#{usuarioController.prepareView}" value="#{bundle.ListUsuarioViewLink}"/>
-                            <h:outputText value=" "/>
-                            <h:commandLink action="#{usuarioController.prepareEdit}" value="#{bundle.ListUsuarioEditLink}"/>
-                            <h:outputText value=" "/>
-                            <h:commandLink action="#{usuarioController.destroy}" value="#{bundle.ListUsuarioDestroyLink}"/>
-                        </h:column>
-                    </h:dataTable>
-                </h:panelGroup>
-                <br />
-                <h:commandLink action="#{usuarioController.prepareCreate}" value="#{bundle.ListUsuarioCreateLink}"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.ListUsuarioIndexLink}"/>
+            <h:panelGroup id="messagePanel" layout="block" class="">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form id="form1">
+                <div class="row">
+                    <table id="example" class="highlight responsive-table striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <td><b>Documento</b></td>
+                                <th>Nombre</th>
+                                <th>Perfil</th>
+                                <th>Correo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <h:inputHidden  id="tarID" />
+                            <c:forEach items="#{usuarioController.todosUsuarios()}" var="item">
+                                <tr>
+                                    <td>#{item.documento}</td>
+                                    <td>#{item.nombre} #{item.apellido}</td>
+                                    <td>#{item.IDperfil.nombre}</td>
+                                    <td>#{item.correo}</td>
+                                    <td>
+                                        <a href="#" class="tooltipped modal-trigger" data-position="bottom" data-delay="50" data-tooltip="Inf. Completa" onclick="muestraUsuario(#{item.IDUsuario},'#{item.nombre}','#{item.apellido}','#{item.correo}','#{item.fechaNacimiento}',#{item.documento},'#{item.clave}','#{item.IDperfil.nombre}','#{item.IDTipoDocumento.descripcion}')" ><i class="material-icons">chrome_reader_mode</i></a>
+                                        <h:commandLink class="tooltipped modal-trigger" p:data-position="bottom" p:data-delay="50" p:data-tooltip="Editar" action="#{usuarioController.preparaEdicion(item.correo,item.clave)}"><i class="material-icons">mode_edit</i> </h:commandLink> 
+                                        <h:commandLink class="tooltipped modal-trigger" p:data-position="bottom" p:data-delay="50" p:data-tooltip="Eliminar" action="#{usuarioController.eliminar(item.IDUsuario)}" ><i class="material-icons">delete_forever</i></h:commandLink>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="usuario" class="modal">
+                    <div class="modal-content">
+                        <h4>Informacion de <span id="nombre"/></h4>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input id="nombreinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="nombreinput">Nombre</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input id="apellidoinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="nombreinput">Apellido</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">credit_card</i>
+                                <input id="tdocumentoinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="tdocumentoinput">Tipo de documento</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">credit_card</i>
+                                <input id="documentoinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="documentoinput">Documento</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">email</i>
+                                <input id="correoinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="correoinput">Correo</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">group_work</i>
+                                <input id="perfilinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="perfilinput">Perfil</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+                </div>
             </h:form>
+            <script>
+                $(document).ready(function () {
+
+
+                });
+                function muestraUsuario(id, nombre, apellido, correo, fechaNacimiento, documento, clave, perfil, tipoDocumento) {
+                    $("#nombre").html(nombre + ' ' + apellido);
+                    $('#nombreinput').val(nombre);
+                    $('#apellidoinput').val(apellido);
+                    $('#tdocumentoinput').val(tipoDocumento);
+                    $('#documentoinput').val(documento);
+                    $('#correoinput').val(correo);
+                    $('#perfilinput').val(perfil);
+                    $('#usuario').modal('open');
+                }
+            </script>
+
         </ui:define>
     </ui:composition>
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition template="/Plantilla/plantilla.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListPerfilTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+            <h:form id="form1">
+                <div class="row">
+                    <table id="example" class="highlight responsive-table striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Codigo  Solicitud</th>
+                                <th>Codigo Tarjeta</th>
+                                <th>Estado</th>
+                                <th>Monto</th>
+                                <th><center>Acciones</center></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <h:inputHidden  id="tarID" />
+                            <c:forEach items="#{recargacontroller.mostarPorUsuario()}" var="item">
+                                <tr>
+                                    <td>#{item.solicitudRecargaID}</td>
+                                    <td>#{item.tarjetaID.IDTarjeta}</td>
+                                    <td>#{item.estadoRecargaID.descripcion}</td>
+                                    <c:set var="myVar" value="#{item.solicitudRecargaID}" />
+                                    <td>$ #{item.monto}</td>
+                                    <td><center><h:commandLink actionListener="#{recargacontroller.exportarPDF(actionEvent,myVar )}" ><i class="material-icons">description</i></h:commandLink>
+                                     <h:commandLink actionListener="#{recargacontroller.exportarPDF(actionEvent,myVar )}" ><i class="material-icons">cancel</i></h:commandLink></center></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                    <center><a class="waves-effect waves-light btn red" href="../tarjeta/List.xhtml">Ver Tarjetas</a></center>
+                </div>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

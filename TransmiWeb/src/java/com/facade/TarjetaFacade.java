@@ -42,5 +42,4 @@ public class TarjetaFacade extends AbstractFacade<Tarjeta> {
         }
         return tarjetas;
     }
-    
 }

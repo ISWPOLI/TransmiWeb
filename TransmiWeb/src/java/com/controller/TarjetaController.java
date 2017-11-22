@@ -6,8 +6,11 @@ import com.controller.util.PaginationHelper;
 import com.entity.EstadoTarjeta;
 import com.entity.Usuario;
 import com.facade.TarjetaFacade;
-
 import java.io.Serializable;
+import java.util.ArrayList;
+
+
+
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
@@ -18,9 +21,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+
+
 
 @Named("tarjetaController")
 @SessionScoped
@@ -29,18 +37,29 @@ public class TarjetaController implements Serializable {
     private Tarjeta current;
     private DataModel items = null;
     FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        Usuario log = (Usuario) session.getAttribute("usuario");
+    HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+    Usuario log = (Usuario) session.getAttribute("usuario");
 
     @EJB
     private com.facade.TarjetaFacade ejbFacade;
+    @EJB
+    private com.facade.MovimientosFacade movFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 
     public List<Tarjeta> TarjetasDeUsuario() {
         return getFacade().TarjetasDeUsuario(log);
     }
+
     public TarjetaController() {
+       
+    }
+   
+    public String setTarjetaMovimiento() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        selectedItemIndex = Integer.parseInt(request.getParameter("movimientosForm:tarID"));
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("seleccionada", selectedItemIndex);       
+        return "/movimientos/List";
     }
 
     public Tarjeta getSelected() {
@@ -57,7 +76,7 @@ public class TarjetaController implements Serializable {
 
     public PaginationHelper getPagination() {
         if (pagination == null) {
-            
+
         }
         return pagination;
     }
@@ -98,14 +117,14 @@ public class TarjetaController implements Serializable {
 
     public String update() {
         try {
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            selectedItemIndex = Integer.parseInt(request.getParameter("reporteForm:tarID"));
             current = ejbFacade.find(selectedItemIndex);
             EstadoTarjeta tarEst = new EstadoTarjeta();
             tarEst.setIDEstado(2);
             current.setIDEstado(tarEst);
             getFacade().edit(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TarjetaUpdated"));
-            recreatePagination();
-            recreateModel();
             return "List";
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
@@ -212,6 +231,14 @@ public class TarjetaController implements Serializable {
 
     public void setCurrent(Tarjeta current) {
         this.current = current;
+    }
+
+    public com.facade.MovimientosFacade getMovFacade() {
+        return movFacade;
+    }
+
+    public void setMovFacade(com.facade.MovimientosFacade movFacade) {
+        this.movFacade = movFacade;
     }
 
     @FacesConverter(forClass = Tarjeta.class)

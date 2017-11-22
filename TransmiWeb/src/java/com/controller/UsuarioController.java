@@ -2,263 +2,168 @@ package com.controller;
 
 import com.entity.Usuario;
 import com.controller.util.JsfUtil;
-import com.controller.util.PaginationHelper;
-import com.facade.UsuarioFacade;
+import com.entity.Perfil;
+import com.entity.TipoDocumento;
 import java.io.IOException;
 
 import java.io.Serializable;
-import java.util.ResourceBundle;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
-import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Named("usuarioController")
 @SessionScoped
 public class UsuarioController implements Serializable {
 
-    private Usuario current, usuObj;
-    private DataModel items = null;
-
-   
+    private Usuario logueado = new Usuario(), selected = new Usuario();
 
     @EJB
     private com.facade.UsuarioFacade ejbFacade;
-    private PaginationHelper pagination;
-    private int selectedItemIndex;
-    
-     public void login() throws IOException{
-         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String correo = request.getParameter("login:correo");
-        //note the difference when getting the parameter
-        String clave = request.getParameter("login:clave");
-        getUsuObj(correo, clave);
-        if (usuObj.getApellido() != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuObj);
-            FacesContext.getCurrentInstance().getExternalContext().redirect("../faces/tarjeta/List.xhtml");
-        }
-     }
+    private String correo, clave, confirmClave;
+    private int idPerfil =1,idTipoDoc = 1;
+
     public UsuarioController() {
     }
 
-    public Usuario getSelected() {
-        if (current == null) {
-            current = new Usuario();
-            selectedItemIndex = -1;
-        }
-        return current;
-    }
-
-    private UsuarioFacade getFacade() {
-        return ejbFacade;
-    }
-
-    public PaginationHelper getPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().count();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
-                }
-            };
-        }
-        return pagination;
-    }
-
-    public String prepareList() {
-        recreateModel();
-        return "List";
-    }
-
-    public String prepareView() {
-        current = (Usuario) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        return "View";
-    }
-
-    public String prepareCreate() {
-        current = new Usuario();
-        selectedItemIndex = -1;
-        return "Create";
-    }
-
-    public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsuarioCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
+    public void login() throws IOException {
+        logueado = consultaUsuario(correo, clave);
+        if (logueado != (null)) {
+            HttpSession session = JsfUtil.getSession();
+            session.setAttribute("usuario", logueado);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../faces/tarjeta/List.xhtml");
         }
     }
 
-    public String prepareEdit() {
-        current = (Usuario) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        return "Edit";
+    public void logout() throws IOException {
+        logueado = null;
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        Object session = externalContext.getSession(false);
+        HttpSession httpSession = (HttpSession) session;
+        httpSession.invalidate();
+        FacesContext.getCurrentInstance().getExternalContext().redirect("../faces/index.xhtml");
     }
 
-    public String update() {
-        try {
-            getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsuarioUpdated"));
-            return "View";
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
-    public String destroy() {
-        current = (Usuario) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        performDestroy();
-        recreatePagination();
-        recreateModel();
-        return "List";
-    }
-
-    public String destroyAndView() {
-        performDestroy();
-        recreateModel();
-        updateCurrentItem();
-        if (selectedItemIndex >= 0) {
-            return "View";
+    public void registro() {
+        if (confirmClave.equalsIgnoreCase(clave)) {
+            logueado.setClave(clave);
+            ejbFacade.create(logueado);
         } else {
-            // all items were removed - go back to list
-            recreateModel();
-            return "List";
         }
     }
 
-    private void performDestroy() {
+    public Usuario consultaUsuario(String correo, String clave) {
+        Usuario usuObj;
+        List<Usuario> usuList = ejbFacade.ValidarIDContraseña(correo, clave);
+        if (!usuList.isEmpty()) {
+            usuObj = usuList.get(0);
+        } else {
+            usuObj = null;
+        }
+        return usuObj;
+    }
+
+    public void preparaEdicion(String correo, String clave) throws IOException {
+        selected = consultaUsuario(correo, clave);
+        if (selected != (null)) {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../faces/usuario/Edit.xhtml");
+        }
+    }
+
+    public String editar() throws IOException {
         try {
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsuarioDeleted"));
+            Perfil perfil = new Perfil();
+            perfil.setIDperfil(idPerfil);
+            selected.setIDperfil(perfil);
+            TipoDocumento tipoDocumento = new TipoDocumento();
+            tipoDocumento.setIDTipoDocumento(idTipoDoc);
+            selected.setIDTipoDocumento(tipoDocumento);
+            ejbFacade.edit(selected);
+            JsfUtil.addSuccessMessage("Se ha modificado el usuario " + selected.getNombre() + " " + selected.getApellido());
+            return "List";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+             JsfUtil.addSuccessMessage("Error al modificar el usuario " + selected.getNombre());
+        }
+        return "";
+    }
+
+    public void eliminar(int id) throws IOException {
+        Usuario usuario = ejbFacade.find(id);
+        try {
+            ejbFacade.remove(usuario);
+            JsfUtil.addSuccessMessage("Se ha eliminado el usuario " + usuario.getNombre());
+        } catch (Exception e) {
+            JsfUtil.addSuccessMessage("Error al eliminar el usuario " + usuario.getNombre());
         }
     }
 
-    private void updateCurrentItem() {
-        int count = getFacade().count();
-        if (selectedItemIndex >= count) {
-            // selected index cannot be bigger than number of items:
-            selectedItemIndex = count - 1;
-            // go to previous page if last page disappeared:
-            if (pagination.getPageFirstItem() >= count) {
-                pagination.previousPage();
-            }
-        }
-        if (selectedItemIndex >= 0) {
-            current = getFacade().findRange(new int[]{selectedItemIndex, selectedItemIndex + 1}).get(0);
-        }
+    public List<Usuario> todosUsuarios() {
+        return ejbFacade.findAll();
     }
 
-    public DataModel getItems() {
-        if (items == null) {
-            items = getPagination().createPageDataModel();
-        }
-        return items;
-    }
-
-    private void recreateModel() {
-        items = null;
-    }
-
-    private void recreatePagination() {
-        pagination = null;
-    }
-
-    public String next() {
-        getPagination().nextPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String previous() {
-        getPagination().previousPage();
-        recreateModel();
-        return "List";
-    }
-
-    public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
-    }
-
-    public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
-    }
-
+    // getters & setters
     public Usuario getUsuario(java.lang.Integer id) {
         return ejbFacade.find(id);
     }
 
-    public Usuario getUsuObj() {
-        return usuObj;
+    public Usuario getlogueado() {
+        return logueado;
     }
 
-    public Usuario getUsuObj(String correo, String clave) {
-        usuObj = getFacade().ValidarIDContraseña(correo, clave).get(0);
-        return usuObj;
+    public void setlogueado(Usuario logueado) {
+        this.logueado = logueado;
     }
 
-    public void setUsuObj(Usuario usuObj) {
-        this.usuObj = usuObj;
+    public String getCorreo() {
+        return correo;
     }
 
-    @FacesConverter(forClass = Usuario.class)
-    public static class UsuarioControllerConverter implements Converter {
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
 
-        @Override
-        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-            if (value == null || value.length() == 0) {
-                return null;
-            }
-            UsuarioController controller = (UsuarioController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "usuarioController");
-            return controller.getUsuario(getKey(value));
-        }
+    public String getClave() {
+        return clave;
+    }
 
-        java.lang.Integer getKey(String value) {
-            java.lang.Integer key;
-            key = Integer.valueOf(value);
-            return key;
-        }
+    public void setClave(String clave) {
+        this.clave = clave;
+    }
 
-        String getStringKey(java.lang.Integer value) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(value);
-            return sb.toString();
-        }
+    public String getConfirmClave() {
+        return confirmClave;
+    }
 
-        @Override
-        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-            if (object == null) {
-                return null;
-            }
-            if (object instanceof Usuario) {
-                Usuario o = (Usuario) object;
-                return getStringKey(o.getIDUsuario());
-            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Usuario.class.getName());
-            }
-        }
+    public void setConfirmClave(String confirmClave) {
+        this.confirmClave = confirmClave;
+    }
 
+    public Usuario getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Usuario selected) {
+        this.selected = selected;
+    }
+
+    public int getIdPerfil() {
+        return idPerfil;
+    }
+
+    public void setIdPerfil(int idPerfil) {
+        this.idPerfil = idPerfil;
+    }
+
+    public int getIdTipoDoc() {
+        return idTipoDoc;
+    }
+
+    public void setIdTipoDoc(int idTipoDoc) {
+        this.idTipoDoc = idTipoDoc;
     }
 
 }

@@ -3,73 +3,106 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:composition template="/Plantilla/plantilla.xhtml">
         <ui:define name="title">
-            <h:outputText value="#{bundle.ListMovimientosTitle}"></h:outputText>
+            <h:outputText value="#{bundle.ListTarjetaTitle}"></h:outputText>
         </ui:define>
         <ui:define name="body">
-            <h:form styleClass="jsfcrud_list_form">
-                <h:panelGroup id="messagePanel" layout="block">
-                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
-                </h:panelGroup>
-                <h:outputText escape="false" value="#{bundle.ListMovimientosEmpty}" rendered="#{movimientosController.items.rowCount == 0}"/>
-                <h:panelGroup rendered="#{movimientosController.items.rowCount > 0}">
-                    <h:outputText value="#{movimientosController.pagination.pageFirstItem + 1}..#{movimientosController.pagination.pageLastItem + 1}/#{movimientosController.pagination.itemsCount}"/>&nbsp;
-                    <h:commandLink action="#{movimientosController.previous}" value="#{bundle.Previous} #{movimientosController.pagination.pageSize}" rendered="#{movimientosController.pagination.hasPreviousPage}"/>&nbsp;
-                    <h:commandLink action="#{movimientosController.next}" value="#{bundle.Next} #{movimientosController.pagination.pageSize}" rendered="#{movimientosController.pagination.hasNextPage}"/>&nbsp;
-                    <h:dataTable value="#{movimientosController.items}" var="item"  rules="all">
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMovimientosTitle_IDMovimiento}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.IDMovimiento}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMovimientosTitle_fecha}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.fecha}">
-                            </h:outputText>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMovimientosTitle_monto}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.monto}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMovimientosTitle_tipoMovimiento}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.tipoMovimiento}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListMovimientosTitle_IDTarjeta}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.IDTarjeta}"/>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">
-                                <h:outputText value="&nbsp;"/>
-                            </f:facet>
-                            <h:commandLink action="#{movimientosController.prepareView}" value="#{bundle.ListMovimientosViewLink}"/>
-                            <h:outputText value=" "/>
-                            <h:commandLink action="#{movimientosController.prepareEdit}" value="#{bundle.ListMovimientosEditLink}"/>
-                            <h:outputText value=" "/>
-                            <h:commandLink action="#{movimientosController.destroy}" value="#{bundle.ListMovimientosDestroyLink}"/>
-                        </h:column>
-                    </h:dataTable>
-                </h:panelGroup>
-                <br />
-                <h:commandLink action="#{movimientosController.prepareCreate}" value="#{bundle.ListMovimientosCreateLink}"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.ListMovimientosIndexLink}"/>
+            <h:form id="form1">
+                <div class="row">
+                    <table id="example" class="highlight responsive-table striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Código Tarjeta</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="#{movimientosController.movimientosTarjeta()}" var="item">
+                                <tr>
+                                    <td>#{item.IDTarjeta.IDTarjeta}</td>
+                                    <td>#{item.tipoMovimiento.descripcion}</td>
+                                    <td>$ #{item.monto}</td>
+                                    <td>
+                                        <h:outputText value="#{item.fecha}">
+                                            <f:convertDateTime pattern="yyyy-MM-dd - hh:mm aa" timeZone="America/Mexico_City" />
+                                        </h:outputText>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+                <center><a class="waves-effect waves-light btn red" href="../tarjeta/List.xhtml">Ver Tarjetas</a></center>
+                
             </h:form>
+            <h:form id="recargarForm">
+
+                <div id="recarga" class="modal">
+                    <div class="modal-content">
+                        <h4>Recargar</h4>
+                        <label>Seleccione un valor</label>
+                        <h:selectOneMenu value="#{solicitudesController.valorRecarga}" class="input-field col s12" title="Señecc">
+                            <f:selectItem itemLabel="$ 2.000" itemValue="2000"/>
+                            <f:selectItem itemLabel="$ 5.000" itemValue="5000"/>
+                            <f:selectItem itemLabel="$ 10.000" itemValue="10000"/>
+                            <f:selectItem itemLabel="$ 20.000" itemValue="20000"/>
+                            <f:selectItem itemLabel="$ 50.000" itemValue="50000"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="modal-footer">
+                        <h:commandLink class="waves-effect waves-light btn red" value="Si" action="#{solicitudesController.recargar()}"/>
+                        <a href="#!" class="modal-action modal-close waves-effect waves-light btn grey">Cancelar</a>
+                    </div>
+                </div> 
+            </h:form>
+            <h:form id="reporteForm">
+                <div id="reporte" class="modal bottom-sheet">
+                    <div class="modal-content">
+                        <h4>Confirmar</h4>
+                        <p >Está seguro que desea reportar la tarjeta N° <span id="idTar"></span>, Se aplicará un costo de $2000 para recuperarla</p>
+                        <h:inputHidden  id="tarID" />
+                    </div>
+                    <div class="modal-footer">
+                        <h:commandLink class="waves-effect waves-light btn red" action="#{tarjetaController.update()}" value="Si"/>
+                        <a href="#!" class="modal-action modal-close waves-effect waves-light btn grey">Cancelar</a>
+                    </div>
+                </div> 
+            </h:form>
+
+
+
+            <script>
+                $(document).ready(function () {
+
+
+                });
+                function reportar(id) {
+                    $("#idTar").html(id);
+                    document.getElementById('reporteForm:tarID').value = id;
+                    $('#reporte').modal('open');
+                }
+
+                function recargar(id) {
+                    $("#idTar").html(id);
+                    document.getElementById('reporteForm:tarID').value = id;
+                    $('#recarga').modal('open');
+                }
+                function movimientos(id) {
+                    document.getElementById('form1:tarID').value = id;
+                }
+            </script>
+
+
         </ui:define>
+
     </ui:composition>
+
 
 </html>

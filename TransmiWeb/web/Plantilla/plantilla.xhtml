@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -13,66 +14,101 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
         <link href="../css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"/>
+        <link rel="stylesheet" href="../css/dataTable.css"/>
     </h:head>
 
     <h:body>
         <div id="top">
             <ui:insert name="top">
+
                 <nav class="nav-extended">
+                    <ul id="dropdown1" class="dropdown-content">
+                        <h:form>
+                            <li><a href="#!">Mis datos</a></li>
+                            <li><h:commandLink action="#{usuarioController.logout()}">Salir</h:commandLink></li>
+                        </h:form>
+                    </ul>
                     <div class="navbar-fixed  grey darken-4 ">
-                        <a href=""><img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/TransMilenio_Logo.png" width="75"/></a>
+                        <a href=""><img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/TransMilenio_Logo.png" width="75" height="100%"/></a>
                         <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                         <ul class="right hide-on-med-and-down">
-                            <li><a class="waves-effect waves-red modal-trigger" href="FormasPago.html"><h6 class="light grey-text text-lighten-3">Formas de pago</h6></a></li>
-                            <li><a class="waves-effect waves-red modal-trigger" href="#modal3"><h6 class="light grey-text text-lighten-3">Mis Tarjetas</h6></a></li>
-                            <li><a class="waves-effect waves-red modal-trigger" href="#modal1"><h6 class="light grey-text text-lighten-3">${usuarioController.usuObj.nombre}</h6></a></li>
-                            <li><a class="waves-effect waves-red modal-trigger" href="#modal2"><i class="material-icons light grey-text text-lighten-3">live_help</i></a></li>
-                            <li><a href="#modal1"><i class="material-icons light grey-text text-lighten-3">search</i></a></li> <li><a href=""><i class="material-icons light grey-text text-lighten-3">more_vert</i></a></li>
+                            <li><a class="waves-effect waves-red modal-trigger" href="../recargas/List.xhtml"><h6 class="light grey-text text-lighten-3">Mis comprobantes</h6></a></li>
+                            <li><a class="waves-effect waves-red modal-trigger" href="../tarjeta/List.xhtml"><h6 class="light grey-text text-lighten-3">Mis Tarjetas</h6></a></li>
+                            <li><a class="waves-effect waves-red modal-trigger" href="../solicitudes/List.xhtml"><h6 class="light grey-text text-lighten-3">Mis Solicitudes</h6></a></li>
+                            <c:if test="${usuarioController.logueado.IDperfil.IDperfil == 2}">
+                                <li> <li><a class="dropdown-button light grey-text text-lighten-3" href="#!" data-activates="dropdown3">Administracion<i class="material-icons right">arrow_drop_down</i></a></li></li>
+                                <ul id="dropdown3" class="dropdown-content">
+                                    <h:form>
+                                        <li><a class="" href="../usuario/List.xhtml"><h6 class="light">Usuarios</h6></a></li>
+                                    </h:form>
+                                </ul>
+                            </c:if>
+                            <c:if test="${usuarioController.logueado.IDperfil.IDperfil == 3}">
+                                <li> <li><a class="dropdown-button light grey-text text-lighten-3" href="#!" data-activates="dropdown4">Soporte<i class="material-icons right">arrow_drop_down</i></a></li></li>
+                                <ul id="dropdown4" class="dropdown-content">
+                                    <h:form>
+                                        <li><a class="" href="../solicitudes/ListAll.xhtml"><h6 class="light">Solicitudes</h6></a></li>
+                                    </h:form>
+                                </ul>
+                            </c:if>
+                            <li> <li><a class="dropdown-button light grey-text text-lighten-3" href="#!" data-activates="dropdown1">${usuarioController.logueado.nombre}<i class="material-icons right">arrow_drop_down</i></a></li></li>
                         </ul>
+
                     </div>
+                    <ul id="dropdown2" class="dropdown-content">
+                        <h:form>
+                            <li><a href="#!">Mis datos</a></li>
+                            <li><h:commandLink action="#{usuarioController.logout()}">Salir</h:commandLink></li>
+                        </h:form>
+                    </ul>
+                    <ul class="side-nav grey darken-4" id="mobile-demo">
+                        <li><a class="waves-effect waves-red modal-trigger" href="../recargas/List.xhtml"><h6 class="light grey-text text-lighten-3">Mis comprobantes</h6></a></li>
+                        <li><a class="waves-effect waves-red modal-trigger" href="../tarjeta/List.xhtml"><h6 class="light grey-text text-lighten-3">Mis Tarjetas</h6></a></li>
+                        <li><a class="waves-effect waves-red modal-trigger" href="../solicitudes/List.xhtml"><h6 class="light grey-text text-lighten-3">Mis Solicitudes</h6></a></li>
+                        <li> <li><a class="dropdown-button light grey-text text-lighten-3" href="#!" data-activates="dropdown2">${usuarioController.logueado.nombre   }<i class="material-icons right">arrow_drop_down</i></a></li></li>
+                    </ul>
                 </nav>
-                
+
+
+                <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+                <script src="../js/dataTable.js" type="text/javascript"></script>
                 <script src="../js/materialize.js"></script>
                 <script src="../js/init.js"></script>
-                  <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-                  <!--Import jQuery before materialize.js-->
-            <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
-            <script src="../js/dataTable.js" type="text/javascript"></script>
-            <script>
-                $("select").val('10'); //seleccionar valor por defecto del select
-                $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
-                $('select').material_select(); //inicializar el select de materialize
-                $(document).ready(function () {
-                    $('#example').DataTable({
-                        "language": {
-                            "sProcessing": "Procesando...",
-                            "sZeroRecords": "No se encontraron resultados",
-                            "sEmptyTable": "Ningún dato disponible en esta tabla",
-                            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                            "sInfoPostFix": "",
-                            "sUrl": "",
-                            "sInfoThousands": ",",
-                            "sLoadingRecords": "Cargando...",
-                            "oPaginate": {
-                                "sFirst": "Primero",
-                                "sLast": "Último",
-                                "sNext": "Siguiente",
-                                "sPrevious": "Anterior"
-                            },
-                            "oAria": {
-                                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                <!--Import jQuery before materialize.js   -->
+                <script>
+                    $("select").val('10'); //seleccionar valor por defecto del select
+                    $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
+                    $('select').material_select(); //inicializar el select de materialize
+                    $(document).ready(function () {
+                        $('#example').DataTable({
+                            "language": {
+                                "sProcessing": "Procesando...",
+                                "sZeroRecords": "No se encontraron resultados",
+                                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                                "sInfoPostFix": "",
+                                "sUrl": "",
+                                "sInfoThousands": ",",
+                                "sLoadingRecords": "Cargando...",
+                                "oPaginate": {
+                                    "sFirst": "Primero",
+                                    "sLast": "Último",
+                                    "sNext": "Siguiente",
+                                    "sPrevious": "Anterior"
+                                },
+                                "oAria": {
+                                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                }
                             }
-                        }
+                        });
+                        $("select").val('10');
+                        $('select').addClass("browser-default");
                     });
-                    $("select").val('10');
-                    $('select').addClass("browser-default");
-                });
-            </script>
+                </script>
                 <script type="text/javascript">
                     $("select").val('10'); //seleccionar valor por defecto del select
                     $('select').addClass("browser-default"); //agregar una clase de materializecss de esta forma ya no se pierde el select de numero de registros.
@@ -81,7 +117,7 @@
                         $('.modal').modal();
                         $('.slider').slider();
                         $('select').material_select();
-                        
+
                     });
                 </script>
             </ui:insert>

@@ -6,6 +6,8 @@ import com.controller.util.PaginationHelper;
 import com.facade.TipoDocumentoFacade;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -185,7 +187,12 @@ public class TipoDocumentoController implements Serializable {
     }
 
     public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
+         List<TipoDocumento> td = ejbFacade.findAll();
+         List<String> elementList = new ArrayList<>();
+         for (TipoDocumento tipoDocumento : td) {
+            elementList.add(tipoDocumento.getDescripcion());
+        }
+        return JsfUtil.getSelectItems(elementList, true);
     }
 
     public TipoDocumento getTipoDocumento(java.lang.Integer id) {

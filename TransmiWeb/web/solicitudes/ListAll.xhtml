@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+    <ui:composition template="/Plantilla/plantilla.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListSolicitudesTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="form1">
+                <div class="row">
+                    <table id="example" class="display highlight responsive-table" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Código Solicitud</th>
+                                <th>Descipcion</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Usuario</th>
+                                <th><center>Acciones</center></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="#{solicitudesController.todasSolicitudes()}" var="item">
+                                <tr>
+                                    <td><center>#{item.IDSolicitud}</center></td>
+                                    <td>#{item.descripcion}</td>
+                                    <td>
+                                        <h:outputText value="#{item.fecha}">
+                                            <f:convertDateTime pattern="yyyy-MM-dd - hh:mm aa" timeZone="America/Bogota" />
+                                        </h:outputText>
+                                    </td>
+                                    <td>#{item.IDestadosolicitud.descripcion}</td>
+                                    <td><a href="#" class="tooltipped modal-trigger" data-position="bottom" data-delay="50" data-tooltip="Inf. Completa" onclick="muestraUsuario(#{item.IDUsuario.IDUsuario}, '#{item.IDUsuario.nombre}', '#{item.IDUsuario.apellido}', '#{item.IDUsuario.correo}', '#{item.IDUsuario.fechaNacimiento}',#{item.IDUsuario.documento}, '#{item.IDUsuario.clave}', '#{item.IDUsuario.IDperfil.nombre}', '#{item.IDUsuario.IDTipoDocumento.descripcion}')" >#{item.IDUsuario.nombre} #{item.IDUsuario.apellido}</a></td>
+                                    <td>
+                                        <a href="#" class="tooltipped modal-trigger" data-position="bottom" data-delay="50" data-tooltip="Responder" onclick="responde(#{item.IDUsuario.IDUsuario}, '#{item.IDUsuario.nombre}', '#{item.IDUsuario.apellido}', '#{item.IDUsuario.correo}', '#{item.IDUsuario.fechaNacimiento}',#{item.IDUsuario.documento}, '#{item.IDUsuario.clave}', '#{item.IDUsuario.IDperfil.nombre}', '#{item.IDUsuario.IDTipoDocumento.descripcion}')"><i class="material-icons">email</i></a>
+                                        <h:commandLink class="tooltipped modal-trigger" p:data-position="bottom" p:data-delay="50" p:data-tooltip="Editar" action="#{usuarioController.preparaEdicion()}"><i class="material-icons">mode_edit</i> </h:commandLink> 
+                                        <h:commandLink class="tooltipped modal-trigger" p:data-position="bottom" p:data-delay="50" p:data-tooltip="Eliminar" action="#{usuarioController.eliminar()}" ><i class="material-icons">delete_forever</i></h:commandLink>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="fixed-action-btn horizontal tooltipped" data-position="top" data-delay="50" data-tooltip="Añadir solicitud">
+                    <a class="btn-floating btn-large red">
+                        <i class="large material-icons">add</i>
+                    </a>
+                    <ul>
+                        <li><a class="btn-floating red tooltipped" data-position="top" data-delay="50" data-tooltip="Soporte"><i class="material-icons">help</i></a></li>
+                        <li><a class="btn-floating yellow darken-1 tooltipped" data-position="top" data-delay="50" data-tooltip="mejora"><i class="material-icons">format_quote</i></a></li>
+                    </ul>
+                </div> 
+                <div id="usuario" class="modal">
+                    <div class="modal-content">
+                        <h4>Informacion de <span id="nombre"/></h4>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input id="nombreinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="nombreinput">Nombre</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input id="apellidoinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="nombreinput">Apellido</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">credit_card</i>
+                                <input id="tdocumentoinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="tdocumentoinput">Tipo de documento</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">credit_card</i>
+                                <input id="documentoinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="documentoinput">Documento</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">email</i>
+                                <input id="correoinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="correoinput">Correo</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">group_work</i>
+                                <input id="perfilinput" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="perfilinput">Perfil</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="respuesta" class="modal">
+                    <div class="modal-content">
+                        <h4>Respiondiendo a <span id="nombre"/></h4>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input id="nombreinput1" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="nombreinput1">Nombre</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">email</i>
+                                <h:inputText id="correoinput1" value="#{solicitudesController.mail.destino} "/>
+                                <label for="correoinput1">Correoes</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <h:inputTextarea id="respuestaInput" class="materialize-textarea" value="#{solicitudesController.mail.mensaje}"/>
+                                <label for="respuestaInput">Respuesta</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">email</i>
+                                <input id="correoinput1" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="correoinput1">Correo</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <i class="material-icons prefix">group_work</i>
+                                <input id="perfilinput1" type="text" class="validate" disabled="true" value=" "/>
+                                <label for="perfilinput1">Perfil</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <h:commandLink class="waves-effect waves-light btn red" value="Si" action="#{solicitudesController.responder()}"/>
+                        <a href="#!" class="modal-action modal-close waves-effect waves-light btn grey">Cancelar</a>
+                    </div>
+                </div>
+            </h:form>
+            <script>
+                $(document).ready(function () {
+
+
+                });
+                function muestraUsuario(id, nombre, apellido, correo, fechaNacimiento, documento, clave, perfil, tipoDocumento) {
+                    $("#nombre").html(nombre + ' ' + apellido);
+                    $('#nombreinput').val(nombre);
+                    $('#apellidoinput').val(apellido);
+                    $('#tdocumentoinput').val(tipoDocumento);
+                    $('#documentoinput').val(documento);
+                    $('#correoinput').val(correo);
+                    $('#perfilinput').val(perfil);
+                    $('#usuario').modal('open');
+                }
+                function responde(id, nombre, apellido, correo, fechaNacimiento, documento, clave, perfil, tipoDocumento) {
+                    $("#nombre1").html(nombre + ' ' + apellido);
+                    $('#nombreinput1').val(nombre + ' ' + apellido);
+                    $('#apellidoinput1').val(apellido);
+                    $('#tdocumentoinput1').val(tipoDocumento);
+                    $('#documentoinput1').val(documento);
+                    $('#perfilinput1').val(perfil);
+                    $('#respuesta').modal('open');
+                }
+            </script>a
+        </ui:define>
+    </ui:composition>
+
+</html>

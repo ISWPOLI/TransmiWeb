@@ -6,9 +6,13 @@
 package com.facade;
 
 import com.entity.Solicitudes;
+import com.entity.Usuario;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,5 +32,14 @@ public class SolicitudesFacade extends AbstractFacade<Solicitudes> {
     public SolicitudesFacade() {
         super(Solicitudes.class);
     }
-    
+    public List<Solicitudes> SolicirudesDeUsuario(Usuario idUsuario){
+        List<Solicitudes> sol = new ArrayList<>();
+        try {
+            Query p = em.createQuery("SELECT s FROM Solicitudes s WHERE s.iDUsuario  = :user");
+            p.setParameter("user", idUsuario);
+            sol = p.getResultList();
+        } catch (Exception e) {
+        }
+        return sol;
+    }
 }

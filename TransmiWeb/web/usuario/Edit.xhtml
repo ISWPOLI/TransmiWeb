@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-    <ui:composition template="/template.xhtml">
+    <ui:composition template="/Plantilla/plantilla.xhtml">
         <ui:define name="title">
             <h:outputText value="#{bundle.EditUsuarioTitle}"></h:outputText>
         </ui:define>
@@ -16,7 +17,7 @@
             <h:form>
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{bundle.EditUsuarioLabel_IDUsuario}" for="IDUsuario" />
-                    <h:inputText id="IDUsuario" value="#{usuarioController.selected.IDUsuario}" title="#{bundle.EditUsuarioTitle_IDUsuario}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_IDUsuario}"/>
+                    <h:inputText id="IDUsuario" value="#{usuarioController.selected.IDUsuario}" title="#{bundle.EditUsuarioTitle_IDUsuario}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_IDUsuario}" disabled="true"/>
                     <h:outputLabel value="#{bundle.EditUsuarioLabel_nombre}" for="nombre" />
                     <h:inputText id="nombre" value="#{usuarioController.selected.nombre}" title="#{bundle.EditUsuarioTitle_nombre}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_nombre}"/>
                     <h:outputLabel value="#{bundle.EditUsuarioLabel_apellido}" for="apellido" />
@@ -32,24 +33,28 @@
                     <h:outputLabel value="#{bundle.EditUsuarioLabel_clave}" for="clave" />
                     <h:inputText id="clave" value="#{usuarioController.selected.clave}" title="#{bundle.EditUsuarioTitle_clave}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_clave}"/>
                     <h:outputLabel value="#{bundle.EditUsuarioLabel_IDTipoDocumento}" for="IDTipoDocumento" />
-                    <h:selectOneMenu id="IDTipoDocumento" value="#{usuarioController.selected.IDTipoDocumento}" title="#{bundle.EditUsuarioTitle_IDTipoDocumento}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_IDTipoDocumento}">
-                        <f:selectItems value="#{tipoDocumentoController.itemsAvailableSelectOne}"/>
+                    <h:selectOneMenu id="IDTipoDocumento" value="#{usuarioController.idTipoDoc}"  required="true" requiredMessage="Debe seleccionar un tipo de documento">
+                        <f:selectItem itemValue="100" itemLabel="Cédula"/>
+                        <f:selectItem itemValue="101" itemLabel="Cédula de extranjería"/>
                     </h:selectOneMenu>
                     <h:outputLabel value="#{bundle.EditUsuarioLabel_IDperfil}" for="IDperfil" />
-                    <h:selectOneMenu id="IDperfil" value="#{usuarioController.selected.IDperfil}" title="#{bundle.EditUsuarioTitle_IDperfil}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_IDperfil}">
-                        <f:selectItems value="#{perfilController.itemsAvailableSelectOne}"/>
+                    <h:selectOneMenu id="IDperfil" value="#{usuarioController.idPerfil}" required="true" requiredMessage="Debe seleccionar un perfil">
+                        <f:selectItem itemLabel="Select One" itemValue=" " itemDisabled="true"/>  
+                        <c:forEach var="item" items="#{perfilController.todosPerfiles()}">
+                            <c:if test="#{item.IDperfil == usuarioController.selected.IDperfil.IDperfil}">
+                                <f:selectItem itemValue="#{item.IDperfil}" itemLabel="#{item.nombre}" itemDisabled="true"/>
+                            </c:if>
+                            <c:if test="#{item.IDperfil != usuarioController.selected.IDperfil.IDperfil}">
+                                <f:selectItem itemValue="#{item.IDperfil}" itemLabel="#{item.nombre}" />
+                            </c:if>
+                        </c:forEach>
                     </h:selectOneMenu>
                 </h:panelGrid>
-                <h:commandLink action="#{usuarioController.update}" value="#{bundle.EditUsuarioSaveLink}"/>
-                <br />
-                <br />
-                <h:link outcome="View" value="#{bundle.EditUsuarioViewLink}"/>
-                <br />
-                <h:commandLink action="#{usuarioController.prepareList}" value="#{bundle.EditUsuarioShowAllLink}" immediate="true"/>
-                <br />
-                <br />
-                <h:link outcome="/index" value="#{bundle.EditUsuarioIndexLink}" />
+                <center><h:commandLink class="waves-effect waves-light btn red" action="#{usuarioController.editar()}">Guardar</h:commandLink> <a class="waves-effect waves-light btn grey" href="../usuario/List.xhtml">Cancelar</a></center>
             </h:form>
+            <h:selectOneMenu id="list1">
+        <f:selectItem itemLabel="Option 1" itemValue="1" />
+    </h:selectOneMenu>
         </ui:define>
     </ui:composition>
 

@@ -3,12 +3,14 @@ package com.controller;
 import com.entity.Solicitudes;
 import com.controller.util.JsfUtil;
 import com.controller.util.PaginationHelper;
+import com.entity.Correo;
 import com.entity.EstadoSolicitud;
 import com.entity.Usuario;
 import com.facade.SolicitudesFacade;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -27,6 +29,16 @@ import javax.servlet.http.HttpSession;
 public class SolicitudesController implements Serializable {
 
     private Solicitudes current;
+    private Correo mail = new Correo();
+    private String algo;
+
+    public String getAlgo() {
+        return algo;
+    }
+
+    public void setAlgo(String algo) {
+        this.algo = algo;
+    }
     private DataModel items = null;
     FacesContext context = javax.faces.context.FacesContext.getCurrentInstance();
     HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
@@ -47,7 +59,35 @@ public class SolicitudesController implements Serializable {
         }
         return current;
     }
+    
+    public void responder() {
+        try {
+            mail.setContrasena("gjchlaythbawuzok");
+            mail.setUsuario("transmiweb@gmail.com");
+            mail.setAsunto("Respuesta a solicitud N° ");
+            mail.setMensaje("Hola");
+            mail.setArchivo("");
+            mail.setRutaArchivo("");
+            Mailer m = new Mailer();
+            if (m.enviarCorreo(mail)) {
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("SolicitudesCreated"));
+            }else{
+                
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("SolicitudesCreated"));
+            }
+        } catch (Exception e) {
+             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
 
+    public List<Solicitudes> solicitudesUsuario() {
+        return    getFacade().SolicirudesDeUsuario(log);
+    }
+    
+    public List<Solicitudes> todasSolicitudes() {
+        return    getFacade().findAll();
+    }
+    
     private SolicitudesFacade getFacade() {
         return ejbFacade;
     }
@@ -265,6 +305,14 @@ public class SolicitudesController implements Serializable {
             }
         }
 
+    }
+
+    public Correo getMail() {
+        return mail;
+    }
+
+    public void setMail(Correo mail) {
+        this.mail = mail;
     }
 
 }

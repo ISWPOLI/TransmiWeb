@@ -89,6 +89,8 @@ public class Usuario implements Serializable {
     @ManyToOne(optional = false)
     private Perfil iDperfil;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "iDUsuario")
+    private Collection<SolicitudRecarga> solicitudRecargaCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iDUsuario")
     private Collection<Tarjeta> tarjetaCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "iDUsuario")
     private Collection<Solicitudes> solicitudesCollection;
@@ -180,6 +182,15 @@ public class Usuario implements Serializable {
 
     public void setIDperfil(Perfil iDperfil) {
         this.iDperfil = iDperfil;
+    }
+
+    @XmlTransient
+    public Collection<SolicitudRecarga> getSolicitudRecargaCollection() {
+        return solicitudRecargaCollection;
+    }
+
+    public void setSolicitudRecargaCollection(Collection<SolicitudRecarga> solicitudRecargaCollection) {
+        this.solicitudRecargaCollection = solicitudRecargaCollection;
     }
 
     @XmlTransient

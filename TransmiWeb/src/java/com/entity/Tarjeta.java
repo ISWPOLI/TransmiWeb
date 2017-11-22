@@ -49,6 +49,8 @@ public class Tarjeta implements Serializable {
     private int saldo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "iDTarjeta")
     private Collection<Movimientos> movimientosCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tarjetaID")
+    private Collection<SolicitudRecarga> solicitudRecargaCollection;
     @JoinColumn(name = "IDUsuario", referencedColumnName = "IDUsuario")
     @ManyToOne(optional = false)
     private Usuario iDUsuario;
@@ -91,6 +93,15 @@ public class Tarjeta implements Serializable {
 
     public void setMovimientosCollection(Collection<Movimientos> movimientosCollection) {
         this.movimientosCollection = movimientosCollection;
+    }
+
+    @XmlTransient
+    public Collection<SolicitudRecarga> getSolicitudRecargaCollection() {
+        return solicitudRecargaCollection;
+    }
+
+    public void setSolicitudRecargaCollection(Collection<SolicitudRecarga> solicitudRecargaCollection) {
+        this.solicitudRecargaCollection = solicitudRecargaCollection;
     }
 
     public Usuario getIDUsuario() {
